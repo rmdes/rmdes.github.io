@@ -1,1 +1,46 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bluesky DID Resolver</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #result {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Bluesky DID Resolver</h2>
+        <form id="resolverForm">
+            <input type="text" id="usernameInput" placeholder="Enter Bluesky username">
+            <button type="submit">Resolve DID</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('resolverForm');
+        const resultDiv = document.getElementById('result');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value;
+            const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${username}`;
+            const response = await fetch(url);
+            if(response.ok) {
+                const data = await response.json();
+                resultDiv.innerHTML = `DID: ${data.did}`;
+            } else {
+                resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
+            }
+        };
+    </script>
+</body>
+</html>
