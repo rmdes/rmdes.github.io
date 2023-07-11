@@ -1,27 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Bluesky DID Resolver</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        #result {
+
+<style>
+    html,
+    body {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .wrapper {
+      min-height: 100%;
+      margin-bottom: -60px; /* Height of the footer */
+    }
+
+    .footer {
+      height: 60px;
+      background-color: #f5f5f5;
+      padding: 20px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      color:#2c2c2c;
+    }
+
+    #result {
             margin-top: 1rem;
             font-weight: bold;
         }
-    </style>
+  </style>
+
+
 </head>
 <body>
-    <div>
+      <div class="container">
         <h2>Bluesky DID Resolver</h2>
+        <div class="alert alert-info">
+            <strong>How to : </strong> input a bsky username to resolve its DID.
+          </div>
         <form id="resolverForm">
-            <input type="text" id="usernameInput" placeholder="Enter Bluesky username">
-            <button type="submit">Resolve DID</button>
+            <input type="text" class="form-control" id="usernameInput" placeholder="Enter Bluesky username">
+            <button class="btn btn-info" type="submit">Resolve DID</button>
+
         </form>
         <div id="result"></div>
     </div>
@@ -42,5 +76,12 @@
             }
         };
     </script>
+
+
+<footer class="footer">
+    <div class="container">
+        <p>Made with care by <a href="https://blog.rmendes.net">rMdes</a></p>
+    </div>
+  </footer>
 </body>
 </html>
