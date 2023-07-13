@@ -60,22 +60,22 @@
         <div id="result"></div>
     </div>
 
-    <script>
-        const form = document.getElementById('resolverForm');
-        const resultDiv = document.getElementById('result');
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('usernameInput').value;
-            const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${username}`;
-            const response = await fetch(url);
-            if(response.ok) {
-                const data = await response.json();
-                resultDiv.innerHTML = `DID: ${data.did}`;
-            } else {
-                resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
-            }
-        };
-    </script>
+<script>
+    const form = document.getElementById('resolverForm');
+    const resultDiv = document.getElementById('result');
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('usernameInput').value;
+        const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(username)}`;
+        const response = await fetch(url);
+        if(response.ok) {
+            const data = await response.json();
+            resultDiv.innerHTML = `DID: ${data.did}`;
+        } else {
+            resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
+        }
+    };
+</script>
 
 
 <footer class="footer">
