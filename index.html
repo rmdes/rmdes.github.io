@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
@@ -44,44 +45,96 @@
         }
   </style>
 
-
+    
 </head>
 <body>
-      <div class="container">
+    <div class="container">
         <h2>Bluesky DID Resolver</h2>
         <div class="alert alert-info">
-            <strong>How to : </strong> input a bsky username to resolve its DID.
-          </div>
+            <strong>How to: </strong> input a bsky username to resolve its DID.
+        </div>
         <form id="resolverForm">
             <input type="text" class="form-control" id="usernameInput" placeholder="Enter Bluesky username">
             <button class="btn btn-info" type="submit">Resolve DID</button>
-
         </form>
         <div id="result"></div>
     </div>
 
-<script>
-    const form = document.getElementById('resolverForm');
-    const resultDiv = document.getElementById('result');
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('usernameInput').value;
-        const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(username)}`;
-        const response = await fetch(url);
-        if(response.ok) {
-            const data = await response.json();
-            resultDiv.innerHTML = `DID: ${data.did}`;
-        } else {
-            resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
-        }
-    };
-</script>
-
-
-<footer class="footer">
     <div class="container">
-        <p>Made with care by <a href="https://blog.rmendes.net">rMdes</a></p>
+        <h2>Bluesky Post URI Resolver</h2>
+        <div class="alert alert-info">
+            <strong>How to: </strong> input the full URL of a bsky post to resolve its URI.
+        </div>
+        <form id="postResolverForm">
+            <input type="text" class="form-control" id="postIDInput" placeholder="Enter Post URL">
+            <button class="btn btn-info" type="submit">Resolve Post URI</button>
+        </form>
+        <div id="postResult"></div>
+    </div>
+
+    <script>
+        // Code for DID Resolver
+        const form = document.getElementById('resolverForm');
+        const resultDiv = document.getElementById('result');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value;
+            const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(username)}`;
+            const response = await fetch(url);
+            if(response.ok) {
+                const data = await response.json();
+                resultDiv.innerHTML = `DID: ${data.did}`;
+            } else {
+                resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
+            }
+        };
+
+          // Code for Post URI Resolver
+        const postForm = document.getElementById('postResolverForm');
+        const postResultDiv = document.getElementById('postResult');
+
+        postForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const postURL = document.getElementById('postIDInput').value;
+            
+            // Parse the URL to extract the username and post ID
+            const urlParts = postURL.split("/");
+            if(urlParts.length < 6) {
+                postResultDiv.innerHTML = 'Invalid URL format. Please check the input and try again.';
+                return;
+            }
+            const postUsername = urlParts[4];
+            const postID = urlParts[6];
+            
+            // First fetch the DID for the user handle
+            const didUrl = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(postUsername)}`;
+            const didResponse = await fetch(didUrl);
+            if(didResponse.ok) {
+                const didData = await didResponse.json();
+                const userDID = didData.did;
+
+                // Now fetch the URI for the specific post using the DID
+                const postUrl = `https://bsky.social/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(userDID)}&collection=app.bsky.feed.post&rkey=${encodeURIComponent(postID)}`;
+                const postResponse = await fetch(postUrl);
+                if(postResponse.ok) {
+                    const formattedURI = `at://did:plc:${userDID}/app.bsky.feed.post/${postID}`;
+                    postResultDiv.innerHTML = `URI: ${formattedURI}`;
+                } else {
+                    postResultDiv.innerHTML = 'Error retrieving Post URI. Please check the inputs and try again.';
+                }
+            } else {
+                postResultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
+            }
+        };
+    </script>
+
+    <footer class="footer">
+    <div class="container">
+        <p>Made with care by <a href="https://blog.rmendes.net">@rMendes.net</a></p>
     </div>
   </footer>
+
+    
 </body>
 </html>
