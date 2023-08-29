@@ -126,7 +126,7 @@
                 const postUrl = `https://bsky.social/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(userDID)}&collection=app.bsky.feed.post&rkey=${encodeURIComponent(postID)}`;
                 const postResponse = await fetch(postUrl);
                 if(postResponse.ok) {
-                    const formattedURI = `at://did:plc:${userDID}/app.bsky.feed.post/${postID}`;
+                    const formattedURI = `at://${userDID}/app.bsky.feed.post/${postID}`;
                     postResultDiv.innerHTML = `URI: ${formattedURI}`;
                 } else {
                     postResultDiv.innerHTML = 'Error retrieving Post URI. Please check the inputs and try again.';
