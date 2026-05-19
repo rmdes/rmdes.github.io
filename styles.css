@@ -93,6 +93,10 @@ main {
 /* projects */
 .projects { margin-bottom: var(--space-section); }
 
+.project-section + .project-section {
+  margin-top: var(--space-section);
+}
+
 .section-label {
   display: flex;
   justify-content: space-between;

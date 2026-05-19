@@ -10,25 +10,25 @@ async function loadConfig() {
   return res.json();
 }
 
-// One targeted request per featured repo. Always correct regardless of how many
-// public repos the owner has, or how recently each featured repo was pushed.
-// Uses Promise.allSettled so a single 404 / rate-limit doesn't suppress the others.
-async function fetchProjectRepos(owner, projects) {
-  const settled = await Promise.allSettled(
-    projects.map(p =>
-      fetch(`${API_BASE}/repos/${owner}/${p.repo}`, {
-        headers: { Accept: "application/vnd.github+json" }
-      }).then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-    )
-  );
+// Paginated batch fetch of all the owner's public repos. With ~3 calls for 249
+// repos we stay safely within the 60/hr unauthenticated rate limit per IP, and
+// every featured repo is covered regardless of pushed_at recency. Sequential
+// because rate-limit headroom > parallelism speedup at this volume.
+const REPO_PAGE_SIZE = 100;
+const REPO_MAX_PAGES = 10;
+
+async function fetchAllRepos(owner) {
   const byName = new Map();
-  settled.forEach((res, i) => {
-    if (res.status === "fulfilled") {
-      byName.set(projects[i].repo, res.value);
-    } else {
-      console.warn(`GitHub API: skipped ${projects[i].repo} (${res.reason.message})`);
-    }
-  });
+  for (let page = 1; page <= REPO_MAX_PAGES; page++) {
+    const res = await fetch(
+      `${API_BASE}/users/${owner}/repos?per_page=${REPO_PAGE_SIZE}&page=${page}&sort=full_name`,
+      { headers: { Accept: "application/vnd.github+json" } }
+    );
+    if (!res.ok) throw new Error(`GitHub API: HTTP ${res.status} on page ${page}`);
+    const repos = await res.json();
+    for (const r of repos) byName.set(r.name, r);
+    if (repos.length < REPO_PAGE_SIZE) break;
+  }
   return byName;
 }
 
@@ -92,13 +92,32 @@ function buildCard(p, owner, i) {
   ]);
 }
 
-function renderCards(projects, owner) {
-  document.querySelector(".count").textContent =
-    `${projects.length} project${projects.length === 1 ? "" : "s"}`;
-  document.querySelector(".project-grid").replaceChildren(
-    ...projects.map((p, i) => el("li", { class: "project-card-wrap" }, buildCard(p, owner, i)))
+function slugify(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function renderSection(section, owner) {
+  const slug = slugify(section.title);
+  const headingId = `sect-${slug}`;
+  return el("section", { class: "project-section", "aria-labelledby": headingId }, [
+    el("header", { class: "section-label" }, [
+      el("h2", { id: headingId }, section.title),
+      el("span", { class: "count" }, String(section.projects.length)),
+    ]),
+    el("ul", { class: "project-grid" },
+      section.projects.map((p, i) =>
+        el("li", { class: "project-card-wrap" }, buildCard(p, owner, i))
+      )
+    ),
+  ]);
+}
+
+function renderSections(sections, owner) {
+  document.querySelector(".project-sections").replaceChildren(
+    ...sections.map(s => renderSection(s, owner))
   );
 }
+
 
 function relativeDate(iso) {
   const then = new Date(iso).getTime();
@@ -131,7 +150,11 @@ function enrichCards(byName) {
     return;
   }
   renderIntro(cfg.intro);
-  renderCards(cfg.projects, cfg.owner);
-  const byName = await fetchProjectRepos(cfg.owner, cfg.projects);
-  enrichCards(byName);
+  renderSections(cfg.sections, cfg.owner);
+  try {
+    const byName = await fetchAllRepos(cfg.owner);
+    enrichCards(byName);
+  } catch (err) {
+    console.warn("GitHub API enrichment skipped:", err);
+  }
 })();

@@ -4,26 +4,320 @@
     "name": "rMdes",
     "tagline": "Independent web, Bluesky tooling, IndieWeb infrastructure.",
     "links": [
-      { "label": "blog", "url": "https://blog.rmendes.net" },
-      { "label": "rmendes.net", "url": "https://rmendes.net" },
-      { "label": "bluesky", "url": "https://bsky.app/profile/rmdes.bsky.social" },
-      { "label": "github", "url": "https://github.com/rmdes" }
+      {
+        "label": "rmendes.net",
+        "url": "https://rmendes.net"
+      },
+      {
+        "label": "about",
+        "url": "https://rmendes.net/about/"
+      },
+      {
+        "label": "bluesky",
+        "url": "https://bsky.app/profile/rmendes.net"
+      },
+      {
+        "label": "github",
+        "url": "https://github.com/rmdes"
+      }
     ]
   },
-  "projects": [
+  "sections": [
     {
-      "repo": "plume",
-      "title": "Plume",
-      "tagline": "Cross-browser Micropub client. Chrome + Firefox, MV3, IndieAuth.",
-      "site": "https://rmdes.github.io/plume/",
-      "tags": ["browser-extension", "micropub", "indieweb"]
+      "title": "Featured",
+      "projects": [
+        {
+          "repo": "plume",
+          "title": "Plume",
+          "tagline": "Cross-browser Micropub client. Chrome + Firefox, MV3, IndieAuth.",
+          "site": "https://rmdes.github.io/plume/",
+          "tags": [
+            "browser-extension",
+            "micropub",
+            "indieweb"
+          ]
+        },
+        {
+          "repo": "did",
+          "title": "Bluesky DID Resolver",
+          "tagline": "Resolve a Bluesky handle to its DID, or a post URL to its at:// URI.",
+          "site": "https://rmdes.github.io/did/",
+          "tags": [
+            "bluesky",
+            "atproto"
+          ]
+        }
+      ]
     },
     {
-      "repo": "did",
-      "title": "Bluesky DID Resolver",
-      "tagline": "Resolve a Bluesky handle to its DID, or a post URL to its at:// URI.",
-      "site": "https://rmdes.github.io/did/",
-      "tags": ["bluesky", "atproto"]
+      "title": "Indiekit",
+      "projects": [
+        {
+          "repo": "indiekit-cloudron",
+          "title": "indiekit-cloudron",
+          "tagline": "Indiekit deployment for Cloudron with IndieWeb-native Eleventy theme"
+        },
+        {
+          "repo": "indiekit-endpoint-auth",
+          "title": "indiekit-endpoint-auth",
+          "tagline": "IndieAuth authentication and authorization endpoint for Indiekit"
+        },
+        {
+          "repo": "indiekit-deploy",
+          "title": "indiekit-deploy",
+          "tagline": "Docker Compose + Ansible deployment for Indiekit (IndieWeb server + Eleventy static site)"
+        },
+        {
+          "repo": "indiekit-eleventy-theme",
+          "title": "indiekit-eleventy-theme",
+          "tagline": "Eleventy theme for Indiekit-powered IndieWeb blogs"
+        },
+        {
+          "repo": "indiekit-endpoint-activitypub",
+          "title": "indiekit-endpoint-activitypub",
+          "tagline": "ActivityPub federation endpoint for Indiekit"
+        },
+        {
+          "repo": "indiekit-endpoint-micropub",
+          "title": "indiekit-endpoint-micropub",
+          "tagline": "Fork of @indiekit/endpoint-micropub with mp-syndicate-to preservation for IndieNews and similar services"
+        },
+        {
+          "repo": "indiekit-frontend",
+          "title": "indiekit-frontend",
+          "tagline": "Frontend components for Indiekit (fork with floating selection toolbar)"
+        },
+        {
+          "repo": "indiekit-endpoint-webmention-sender",
+          "title": "indiekit-endpoint-webmention-sender",
+          "tagline": "Webmention sender endpoint for Indiekit. Automatically discovers and sends webmentions for published posts."
+        },
+        {
+          "repo": "indiekit-endpoint-readlater",
+          "title": "indiekit-endpoint-readlater",
+          "tagline": "Read It Later endpoint for Indiekit. Save URLs from any context for later consumption."
+        },
+        {
+          "repo": "indiekit-endpoint-funkwhale",
+          "title": "indiekit-endpoint-funkwhale",
+          "tagline": "an indiekit plugin to display funkwhale data on indiekit + eleventy blog"
+        },
+        {
+          "repo": "indiekit-scripts",
+          "title": "indiekit-scripts",
+          "tagline": "Operational scripts for managing an Indiekit development workspace with forked upstream packages"
+        },
+        {
+          "repo": "indiekit",
+          "title": "indiekit",
+          "tagline": "The little Node.js server with all the parts needed to publish content to your personal website and share it on social networks."
+        },
+        {
+          "repo": "indiekit-endpoint-conversations",
+          "title": "indiekit-endpoint-conversations",
+          "tagline": "Conversation aggregation endpoint for Indiekit - unified cross-protocol conversation views with protocol provenance"
+        },
+        {
+          "repo": "indiekit-endpoint-cv",
+          "title": "indiekit-endpoint-cv",
+          "tagline": "CV/Resume editor endpoint for Indiekit. Manage work experience, projects, skills, education, and interests from the admin UI."
+        },
+        {
+          "repo": "indiekit-endpoint-microsub",
+          "title": "indiekit-endpoint-microsub",
+          "tagline": "Microsub endpoint for Indiekit"
+        },
+        {
+          "repo": "indiekit-endpoint-github",
+          "title": "indiekit-endpoint-github",
+          "tagline": "custom plugin to fetch data from Github for Indiekit"
+        },
+        {
+          "repo": "indiekit-endpoint-webmention-io",
+          "title": "indiekit-endpoint-webmention-io",
+          "tagline": "Indiekit webmention moderation plugin with MongoDB cache, blocklist, and privacy removal"
+        },
+        {
+          "repo": "indiekit-endpoint-rss",
+          "title": "indiekit-endpoint-rss",
+          "tagline": "RSS feed reader endpoint for Indiekit. Aggregates multiple feeds, caches in MongoDB, displays on frontend."
+        },
+        {
+          "repo": "indiekit-endpoint-lastfm",
+          "title": "indiekit-endpoint-lastfm",
+          "tagline": "Last.fm scrobble and listening activity endpoint for Indiekit"
+        },
+        {
+          "repo": "indiekit-endpoint-podroll",
+          "title": "indiekit-endpoint-podroll",
+          "tagline": "Podcast roll endpoint for Indiekit - aggregates episodes from FreshRSS with OPML sidebar"
+        },
+        {
+          "repo": "indiekit-endpoint-blogroll",
+          "title": "indiekit-endpoint-blogroll",
+          "tagline": "Indiekit endpoint plugin for blogroll management with OPML import and RSS aggregation"
+        },
+        {
+          "repo": "indiekit-startup-gate",
+          "title": "indiekit-startup-gate",
+          "tagline": "Defers Indiekit plugin background tasks until the host signals readiness"
+        },
+        {
+          "repo": "indiekit-endpoint-homepage",
+          "title": "indiekit-endpoint-homepage",
+          "tagline": "Homepage builder endpoint for Indiekit. Configure layout, sections, and sidebar widgets from the admin UI."
+        },
+        {
+          "repo": "indiekit-syndicator-bluesky",
+          "title": "indiekit-syndicator-bluesky",
+          "tagline": "Bluesky syndicator for Indiekit with external like support"
+        },
+        {
+          "repo": "indiekit-endpoint-comments",
+          "title": "indiekit-endpoint-comments",
+          "tagline": "Comment endpoint for Indiekit \u2014 IndieAuth/RelMeAuth-based comment system with admin dashboard and JF2 API"
+        },
+        {
+          "repo": "indiekit-endpoint-share",
+          "title": "indiekit-endpoint-share",
+          "tagline": ""
+        },
+        {
+          "repo": "indiekit-endpoint-files",
+          "title": "indiekit-endpoint-files",
+          "tagline": "File management endpoint for Indiekit with multi-file upload support"
+        },
+        {
+          "repo": "indiekit-endpoint-posts",
+          "title": "indiekit-endpoint-posts",
+          "tagline": "Fork of @indiekit/endpoint-posts with syndicate form fix"
+        },
+        {
+          "repo": "indiekit-endpoint-syndicate",
+          "title": "indiekit-endpoint-syndicate",
+          "tagline": ""
+        },
+        {
+          "repo": "indiekit-syndicator-indienews",
+          "title": "indiekit-syndicator-indienews",
+          "tagline": "IndieNews syndicator for Indiekit"
+        },
+        {
+          "repo": "indiekit-syndicator-mastodon",
+          "title": "indiekit-syndicator-mastodon",
+          "tagline": "Mastodon syndicator for Indiekit with external like support"
+        },
+        {
+          "repo": "indiekit-preset-eleventy",
+          "title": "indiekit-preset-eleventy",
+          "tagline": "Eleventy publication preset for Indiekit"
+        },
+        {
+          "repo": "indiekit-endpoint-youtube",
+          "title": "indiekit-endpoint-youtube",
+          "tagline": "YouTube channel endpoint for Indiekit - display latest videos and live streaming status"
+        },
+        {
+          "repo": "indiekit-endpoint-linkedin",
+          "title": "indiekit-endpoint-linkedin",
+          "tagline": "LinkedIn OAuth 2.0 endpoint for Indiekit \u2014 handles token acquisition through the UI"
+        },
+        {
+          "repo": "indiekit-syndicator-linkedin",
+          "title": "indiekit-syndicator-linkedin",
+          "tagline": "LinkedIn syndicator for Indiekit, supporting notes and articles"
+        },
+        {
+          "repo": "indiekit-post-type-page",
+          "title": "indiekit-post-type-page",
+          "tagline": "Page post type for Indiekit - creates root-level slash pages like /about, /now, /uses"
+        },
+        {
+          "repo": "indiekit-endpoint-webmentions-proxy",
+          "title": "indiekit-endpoint-webmentions-proxy",
+          "tagline": "Webmentions proxy endpoint for Indiekit - proxies webmention.io API with server-side authentication"
+        }
+      ]
+    },
+    {
+      "title": "Claude tooling",
+      "projects": [
+        {
+          "repo": "deepclaude",
+          "title": "deepclaude",
+          "tagline": "Use Claude Code's autonomous agent loop with DeepSeek V4 Pro, OpenRouter, or any Anthropic-compatible backend. Same UX, 17x cheaper."
+        },
+        {
+          "repo": "claude-recent",
+          "title": "claude-recent",
+          "tagline": "Cross-machine session tracker for Claude Code \u2014 index sessions to a shared folder, browse with an fzf TUI, resume from anywhere"
+        },
+        {
+          "repo": "claude-env",
+          "title": "claude-env",
+          "tagline": "Safely backup, swap, and restore your Claude Code environment"
+        },
+        {
+          "repo": "claude-howto",
+          "title": "claude-howto",
+          "tagline": "A visual, example-driven guide to Claude Code \u2014 from basic concepts to advanced agents, with copy-paste templates that bring immediate\u2026"
+        },
+        {
+          "repo": "claude-status-update",
+          "title": "claude-status-update",
+          "tagline": "A Claude Code plugin that automatically generates a standup ready update of what you built in the last 24 hours"
+        },
+        {
+          "repo": "claudecodeui",
+          "title": "claudecodeui",
+          "tagline": "Use Claude Code, Cursor CLI or Codex on mobile and web with CloudCLI (aka Claude Code UI). CloudCLI is a free open source webui/GUI that\u2026"
+        },
+        {
+          "repo": "claude-brain",
+          "title": "claude-brain",
+          "tagline": "Sync your Claude Code brain across machines \u2014 memory, skills, agents, rules, and settings with intelligent semantic merge. Git-based,\u2026"
+        },
+        {
+          "repo": "claude-code-langfuse-template",
+          "title": "claude-code-langfuse-template",
+          "tagline": "Self-hosted Langfuse for Claude Code session observability"
+        },
+        {
+          "repo": "claude-launcher",
+          "title": "claude-launcher",
+          "tagline": "TUI for managing Claude Code sessions - search, resume, bookmark"
+        },
+        {
+          "repo": "everything-claude-code",
+          "title": "everything-claude-code",
+          "tagline": "Complete Claude Code configuration collection - agents, skills, hooks, commands, rules, MCPs. Battle-tested configs from an Anthropic\u2026"
+        },
+        {
+          "repo": "claude-code-subagents-collection",
+          "title": "claude-code-subagents-collection",
+          "tagline": "Claude Code Subagents & Commands Collection + CLI Tool"
+        }
+      ]
+    },
+    {
+      "title": "Deployments",
+      "projects": [
+        {
+          "repo": "newsdiff-deploy",
+          "title": "newsdiff-deploy",
+          "tagline": "Docker Compose deployment for NewsDiff \u2014 self-hosted news article diff tracker"
+        },
+        {
+          "repo": "funkwhale-v2-deploy",
+          "title": "funkwhale-v2-deploy",
+          "tagline": "Bare-metal deployment toolkit and Ansible role for Funkwhale v2"
+        },
+        {
+          "repo": "ansible-monitoring-deploy",
+          "title": "ansible-monitoring-deploy",
+          "tagline": "Ansible deployment of a Prometheus based monitoring stack"
+        }
+      ]
     }
   ]
 }
