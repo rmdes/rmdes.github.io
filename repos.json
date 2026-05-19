@@ -1,0 +1,29 @@
+{
+  "owner": "rmdes",
+  "intro": {
+    "name": "rMdes",
+    "tagline": "Independent web, Bluesky tooling, IndieWeb infrastructure.",
+    "links": [
+      { "label": "blog", "url": "https://blog.rmendes.net" },
+      { "label": "rmendes.net", "url": "https://rmendes.net" },
+      { "label": "bluesky", "url": "https://bsky.app/profile/rmdes.bsky.social" },
+      { "label": "github", "url": "https://github.com/rmdes" }
+    ]
+  },
+  "projects": [
+    {
+      "repo": "plume",
+      "title": "Plume",
+      "tagline": "Cross-browser Micropub client. Chrome + Firefox, MV3, IndieAuth.",
+      "site": "https://rmdes.github.io/plume/",
+      "tags": ["browser-extension", "micropub", "indieweb"]
+    },
+    {
+      "repo": "did",
+      "title": "Bluesky DID Resolver",
+      "tagline": "Resolve a Bluesky handle to its DID, or a post URL to its at:// URI.",
+      "site": "https://rmdes.github.io/did/",
+      "tags": ["bluesky", "atproto"]
+    }
+  ]
+}
