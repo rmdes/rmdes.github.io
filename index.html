@@ -1,148 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Bluesky DID Resolver</title>
-
-<style>
-    html,
-    body {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-    }
-
-    .wrapper {
-      min-height: 100%;
-      margin-bottom: -60px; /* Height of the footer */
-    }
-
-    .footer {
-      height: 60px;
-      background-color: #f5f5f5;
-      padding: 20px;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      color:#2c2c2c;
-    }
-
-    #result {
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-  </style>
-
-    
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>rMdes — Projects</title>
+  <meta name="description" content="Independent web, Bluesky tooling, IndieWeb infrastructure.">
+  <meta name="color-scheme" content="dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Bluesky DID Resolver</h2>
-        
-        <div class="alert alert-info">
-            <strong>How to: input a bsky username (without the @) to resolve its DID.</strong> <br>
-            <strong>Comment utiliser: tape ton nom d'utilisateur Bluesky (sans le @)</strong>
-        </div>
-        <form id="resolverForm">
-            <input type="text" class="form-control" id="usernameInput" placeholder="Enter Bluesky username">
-            <button class="btn btn-info" type="submit">Resolve DID</button>
-        </form>
-        <br>
-        <hr>
-        <div id="result"></div>
-        <br>
-        <hr>
+  <main>
+    <header class="masthead">
+      <a class="brand" href="/">rMdes</a>
+      <nav class="links" aria-label="external links"></nav>
+    </header>
 
-                <h2>Bluesky Post URI Resolver</h2>
-        <div class="alert alert-info">
-            <strong>How to: input the full URL of a bsky post to resolve its URI and use as Single Post within skyfeed.app </strong> <br>
-            <strong>Comment faire: colle un lien direct vers un de tes posts sur bluesky pour en connaître le URI et l'utiliser comme Single Post dans skyfeed.app</strong>
-        </div>
-        <form id="postResolverForm">
-            <input type="text" class="form-control" id="postIDInput" placeholder="Enter Post URL">
-            <button class="btn btn-info" type="submit">Resolve Post URI</button>
-        </form>
-        <br>
-        <hr>
-        <div id="postResult"></div>
-        <br>
-    </div>
+    <section class="intro" aria-labelledby="intro-heading">
+      <h1 id="intro-heading"></h1>
+    </section>
 
-    <script>
-        // Code for DID Resolver
-        const form = document.getElementById('resolverForm');
-        const resultDiv = document.getElementById('result');
+    <hr class="rule" />
 
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('usernameInput').value;
-            const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(username)}`;
-            const response = await fetch(url);
-            if(response.ok) {
-                const data = await response.json();
-                resultDiv.innerHTML = `DID: ${data.did}`;
-            } else {
-                resultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
-            }
-        };
-
-          // Code for Post URI Resolver
-        const postForm = document.getElementById('postResolverForm');
-        const postResultDiv = document.getElementById('postResult');
-
-        postForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const postURL = document.getElementById('postIDInput').value;
-            
-            // Parse the URL to extract the username and post ID
-            const urlParts = postURL.split("/");
-            if(urlParts.length < 6) {
-                postResultDiv.innerHTML = 'Invalid URL format. Please check the input and try again.';
-                return;
-            }
-            const postUsername = urlParts[4];
-            const postID = urlParts[6];
-            
-            // First fetch the DID for the user handle
-            const didUrl = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(postUsername)}`;
-            const didResponse = await fetch(didUrl);
-            if(didResponse.ok) {
-                const didData = await didResponse.json();
-                const userDID = didData.did;
-
-                // Now fetch the URI for the specific post using the DID
-                const postUrl = `https://bsky.social/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(userDID)}&collection=app.bsky.feed.post&rkey=${encodeURIComponent(postID)}`;
-                const postResponse = await fetch(postUrl);
-                if(postResponse.ok) {
-                    const formattedURI = `at://${userDID}/app.bsky.feed.post/${postID}`;
-                    postResultDiv.innerHTML = `URI: ${formattedURI}`;
-                } else {
-                    postResultDiv.innerHTML = 'Error retrieving Post URI. Please check the inputs and try again.';
-                }
-            } else {
-                postResultDiv.innerHTML = 'Error retrieving DID. Please check the username and try again.';
-            }
-        };
-    </script>
+    <section class="projects" aria-labelledby="projects-heading">
+      <header class="section-label">
+        <h2 id="projects-heading">Projects</h2>
+        <span class="count"></span>
+      </header>
+      <ul class="project-grid"></ul>
+    </section>
 
     <footer class="footer">
-    <div class="container">
-        <p>Made with care by <a href="https://blog.rmendes.net">@rMendes.net</a></p>
-    </div>
-  </footer>
-
-    
+      <a href="https://github.com/rmdes/rmdes.github.io">view source on github</a>
+    </footer>
+  </main>
+  <script src="./app.js" defer></script>
 </body>
 </html>
