@@ -1,5 +1,4 @@
 const API_BASE = "https://api.github.com";
-const GITHUB_PAGE_SIZE = 100;
 const MS_PER_DAY = 86_400_000;
 const DAYS_PER_WEEK = 7;
 const DAYS_PER_MONTH = 30;
@@ -11,17 +10,26 @@ async function loadConfig() {
   return res.json();
 }
 
-async function fetchAllRepos(owner) {
-  const res = await fetch(
-    `${API_BASE}/users/${owner}/repos?per_page=${GITHUB_PAGE_SIZE}&sort=pushed`,
-    { headers: { Accept: "application/vnd.github+json" } }
+// One targeted request per featured repo. Always correct regardless of how many
+// public repos the owner has, or how recently each featured repo was pushed.
+// Uses Promise.allSettled so a single 404 / rate-limit doesn't suppress the others.
+async function fetchProjectRepos(owner, projects) {
+  const settled = await Promise.allSettled(
+    projects.map(p =>
+      fetch(`${API_BASE}/repos/${owner}/${p.repo}`, {
+        headers: { Accept: "application/vnd.github+json" }
+      }).then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+    )
   );
-  if (!res.ok) throw new Error(`GitHub API: HTTP ${res.status}`);
-  const repos = await res.json();
-  if (repos.length >= GITHUB_PAGE_SIZE) {
-    console.warn("GitHub API: page size limit hit; some repos may be missing from enrichment.");
-  }
-  return repos;
+  const byName = new Map();
+  settled.forEach((res, i) => {
+    if (res.status === "fulfilled") {
+      byName.set(projects[i].repo, res.value);
+    } else {
+      console.warn(`GitHub API: skipped ${projects[i].repo} (${res.reason.message})`);
+    }
+  });
+  return byName;
 }
 
 // Small DOM-builder helper. All text content goes through textContent —
@@ -103,8 +111,7 @@ function relativeDate(iso) {
   return `${Math.floor(days / DAYS_PER_YEAR)}y ago`;
 }
 
-function enrichCards(allRepos) {
-  const byName = new Map(allRepos.map(r => [r.name, r]));
+function enrichCards(byName) {
   for (const card of document.querySelectorAll(".project-card")) {
     const repo = byName.get(card.dataset.repo);
     if (!repo) continue;
@@ -125,10 +132,6 @@ function enrichCards(allRepos) {
   }
   renderIntro(cfg.intro);
   renderCards(cfg.projects, cfg.owner);
-  try {
-    const all = await fetchAllRepos(cfg.owner);
-    enrichCards(all);
-  } catch (err) {
-    console.warn("GitHub API enrichment skipped:", err);
-  }
+  const byName = await fetchProjectRepos(cfg.owner, cfg.projects);
+  enrichCards(byName);
 })();
