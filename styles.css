@@ -247,11 +247,17 @@ hr.rule { display: none; }
   gap: 0.4rem;
 }
 .card-title a { color: var(--color-accent); }
-.card-title svg.repo-icon {
-  width: 16px; height: 16px;
-  color: var(--color-muted);
+
+/* All card SVGs get explicit dimensions. Without these, SVGs without intrinsic
+   width/height stretch to fill flex/grid containers, which is why icons were
+   appearing huge on wide cards (e.g. Featured: 2 cards in a 2-col grid). */
+.project-card svg {
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
+.card-title svg.repo-icon { color: var(--color-muted); }
+.card-link svg.external-link { width: 12px; height: 12px; }
 
 .card-tagline {
   margin: 0;
