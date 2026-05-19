@@ -4,18 +4,21 @@ const DAYS_PER_WEEK = 7;
 const DAYS_PER_MONTH = 30;
 const DAYS_PER_YEAR = 365;
 
+const REPO_PAGE_SIZE = 100;
+const REPO_MAX_PAGES = 10;
+
+// Octicon repo (16) — embedded so we don't need a network fetch for an icon.
+const REPO_ICON_PATH =
+  "M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z";
+// Octicon link-external (16)
+const EXTERNAL_LINK_PATH =
+  "M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z";
+
 async function loadConfig() {
   const res = await fetch("./repos.json");
   if (!res.ok) throw new Error(`repos.json: HTTP ${res.status}`);
   return res.json();
 }
-
-// Paginated batch fetch of all the owner's public repos. With ~3 calls for 249
-// repos we stay safely within the 60/hr unauthenticated rate limit per IP, and
-// every featured repo is covered regardless of pushed_at recency. Sequential
-// because rate-limit headroom > parallelism speedup at this volume.
-const REPO_PAGE_SIZE = 100;
-const REPO_MAX_PAGES = 10;
 
 async function fetchAllRepos(owner) {
   const byName = new Map();
@@ -55,6 +58,19 @@ function el(tag, attrs = {}, children = []) {
   return node;
 }
 
+function svg(d, klass) {
+  const ns = "http://www.w3.org/2000/svg";
+  const s = document.createElementNS(ns, "svg");
+  s.setAttribute("viewBox", "0 0 16 16");
+  s.setAttribute("fill", "currentColor");
+  s.setAttribute("aria-hidden", "true");
+  if (klass) s.setAttribute("class", klass);
+  const path = document.createElementNS(ns, "path");
+  path.setAttribute("d", d);
+  s.appendChild(path);
+  return s;
+}
+
 function renderIntro(intro) {
   document.querySelector(".brand").textContent = intro.name;
 
@@ -66,29 +82,41 @@ function renderIntro(intro) {
   document.querySelector("#intro-heading").textContent = intro.tagline;
 }
 
-function siteLinkLabel(p, owner) {
-  if (p.site) return p.site.replace(/^https?:\/\//, "");
-  return `github.com/${owner}/${p.repo}`;
+function langClassFor(language) {
+  if (!language) return "lang-unknown";
+  return "lang-" + language.replace(/\+/g, "p").replace(/[^A-Za-z0-9-]/g, "");
 }
 
-function buildCard(p, owner, i) {
+function buildCard(p, owner) {
   const href = p.site || `https://github.com/${owner}/${p.repo}`;
+  const repoUrl = `https://github.com/${owner}/${p.repo}`;
+  const title = el("a", { href }, p.title);
+
   return el("article", {
     class: "project-card",
     dataset: { repo: p.repo },
-    style: { "--i": String(i) },
   }, [
-    el("h3", { class: "card-title" }, p.title),
-    el("p",  { class: "card-tagline" }, p.tagline),
-    el("p",  { class: "card-meta" }, [
+    el("h3", { class: "card-title" }, [
+      svg(REPO_ICON_PATH, "repo-icon"),
+      title,
+    ]),
+    p.tagline ? el("p", { class: "card-tagline" }, p.tagline) : null,
+    el("p", { class: "card-meta" }, [
       el("span", { class: "meta-stars" }),
-      el("span", { class: "meta-lang" }),
+      el("span", { class: "meta-lang" }, [
+        el("span", { class: "lang-dot" }),
+        el("span", { class: "lang-name" }),
+      ]),
       el("span", { class: "meta-date" }),
     ]),
-    el("ul", { class: "card-tags" },
-      (p.tags || []).map(t => el("li", { class: "tag" }, t))
-    ),
-    el("a", { class: "card-link", href }, `${siteLinkLabel(p, owner)} →`),
+    (p.tags && p.tags.length)
+      ? el("ul", { class: "card-tags" },
+          p.tags.map(t => el("li", { class: "tag" }, t)))
+      : null,
+    el("a", { class: "card-link", href: repoUrl }, [
+      `github.com/${owner}/${p.repo}`,
+      svg(EXTERNAL_LINK_PATH, "external-link"),
+    ]),
   ]);
 }
 
@@ -105,8 +133,8 @@ function renderSection(section, owner) {
       el("span", { class: "count" }, String(section.projects.length)),
     ]),
     el("ul", { class: "project-grid" },
-      section.projects.map((p, i) =>
-        el("li", { class: "project-card-wrap" }, buildCard(p, owner, i))
+      section.projects.map(p =>
+        el("li", { class: "project-card-wrap" }, buildCard(p, owner))
       )
     ),
   ]);
@@ -117,7 +145,6 @@ function renderSections(sections, owner) {
     ...sections.map(s => renderSection(s, owner))
   );
 }
-
 
 function relativeDate(iso) {
   const then = new Date(iso).getTime();
@@ -134,14 +161,35 @@ function enrichCards(byName) {
   for (const card of document.querySelectorAll(".project-card")) {
     const repo = byName.get(card.dataset.repo);
     if (!repo) continue;
+
     card.querySelector(".meta-stars").textContent = `★ ${repo.stargazers_count ?? 0}`;
-    card.querySelector(".meta-lang").textContent  = repo.language || "—";
-    card.querySelector(".meta-date").textContent  = relativeDate(repo.pushed_at);
+
+    const langWrap = card.querySelector(".meta-lang");
+    const langName = repo.language || "—";
+    langWrap.classList.add(langClassFor(repo.language));
+    langWrap.querySelector(".lang-name").textContent = langName;
+
+    card.querySelector(".meta-date").textContent = relativeDate(repo.pushed_at);
     card.classList.add("has-live-data");
   }
 }
 
+// Theme toggle: respects OS prefers-color-scheme by default; click flips between
+// explicit light/dark which is persisted to localStorage.
+function initThemeToggle() {
+  const btn = document.querySelector(".theme-toggle");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme
+      || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch (_) {}
+  });
+}
+
 (async function init() {
+  initThemeToggle();
   let cfg;
   try {
     cfg = await loadConfig();
