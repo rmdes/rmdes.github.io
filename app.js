@@ -74,6 +74,13 @@ function svg(d, klass) {
 function renderIntro(intro) {
   document.querySelector(".brand").textContent = intro.name;
 
+  const leftNav = document.querySelector(".masthead .left-links");
+  if (leftNav) {
+    leftNav.replaceChildren(
+      ...(intro.left_links || []).map(l => el("a", { href: l.url }, l.label))
+    );
+  }
+
   const nav = document.querySelector(".masthead .links");
   nav.replaceChildren(
     ...intro.links.map(l => el("a", { href: l.url }, l.label))

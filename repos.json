@@ -3,6 +3,12 @@
   "intro": {
     "name": "rMdes",
     "tagline": "Devops engineer, IndieWeb enthusiast, building tools for the open web and independent publishing.",
+    "left_links": [
+      {
+        "label": "starred",
+        "url": "https://rmendes.net/github/starred/"
+      }
+    ],
     "links": [
       {
         "label": "rmendes.net",

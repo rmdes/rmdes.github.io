@@ -115,6 +115,34 @@ main {
 }
 .brand:hover { text-decoration: none; }
 
+.masthead-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.left-links {
+  display: flex;
+  gap: 1rem;
+  font-size: var(--text-body);
+}
+.left-links a {
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.left-links a::before {
+  content: "★";
+  color: var(--color-attention);
+  font-size: 0.85em;
+  line-height: 1;
+}
+.left-links a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
 .masthead-right {
   display: flex;
   align-items: center;
