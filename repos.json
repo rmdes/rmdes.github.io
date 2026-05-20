@@ -23,6 +23,10 @@
         "url": "https://bsky.app/profile/rmendes.net"
       },
       {
+        "label": "mastodon",
+        "url": "https://rmendes.net/activitypub/users/rick"
+      },
+      {
         "label": "github",
         "url": "https://github.com/rmdes"
       }
