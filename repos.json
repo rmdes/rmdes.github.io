@@ -38,13 +38,14 @@
           ]
         },
         {
-          "repo": "did",
-          "title": "Bluesky DID Resolver",
-          "tagline": "Resolve a Bluesky handle to its DID, or a post URL to its at:// URI.",
-          "site": "https://rmdes.github.io/did/",
+          "repo": "newsdiff",
+          "title": "NewsDiff",
+          "tagline": "Monitor RSS feeds for article changes and display visual diffs.",
+          "site": "https://diff.rmendes.net/about",
           "tags": [
-            "bluesky",
-            "atproto"
+            "rss",
+            "news",
+            "self-hosted"
           ]
         }
       ]
